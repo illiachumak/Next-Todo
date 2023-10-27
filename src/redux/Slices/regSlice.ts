@@ -1,47 +1,50 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { app } from "../../app/firebase";
+import { set, ref, getDatabase } from 'firebase/database';
 
 const auth = getAuth(app);
+const db = getDatabase(app)
 
-interface AuthState {
-  isAuthenticated: boolean;
+interface regState {
+  isRegistered: boolean;
   userId: string | null;
   username: string | null;
   errorMessage: string | undefined;
   isLoading: boolean;
 }
 
-const initialState: AuthState = {
-  isAuthenticated: false,
+const initialState: regState = {
+  isRegistered: false,
   userId: null,
   username: null,
   errorMessage: undefined,
   isLoading: false
 };
 
-async function loginUser(email: string, password: string): Promise<string> {
+async function regUser(email: string, password: string): Promise<string> {
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
-
-    console.log('logged in')
-
+    set(ref(db, 'Users/' + user.uid),{
+      email: email,
+    });
+    alert("User Created!");
     return user.uid;
   } catch (error: any) {
     throw new Error('Something went wrong');
   }
 }
 
-export const login = createAsyncThunk(
-  'auth/loginUser',
+export const reg = createAsyncThunk(
+  'reg/regUser',
   async ({ email, password }: { email: string; password: string }) => {
-    return await loginUser(email, password);
+    return await regUser(email, password);
   }
 );
 
-export const authSlice = createSlice({
-  name: 'auth',
+export const regSlice = createSlice({
+  name: 'reg',
   initialState,
   reducers: {
     logOut: () => {
@@ -50,22 +53,22 @@ export const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(login.pending, (state) => {
+      .addCase(reg.pending, (state) => {
         state.isLoading = true;
         state.errorMessage = undefined;
       })
-      .addCase(login.fulfilled, (state, action) => {
-        state.isAuthenticated = true;
+      .addCase(reg.fulfilled, (state, action) => {
+        state.isRegistered = true;
         state.userId = action.payload;
         state.isLoading = false;
       })
-      .addCase(login.rejected, (state, action) => {
+      .addCase(reg.rejected, (state, action) => {
         state.errorMessage = action.error.message;
         state.isLoading = false;
       });
   },
 });
 
-export const { logOut } = authSlice.actions;
+export const { logOut } = regSlice.actions;
 
-export default authSlice.reducer;
+export default regSlice.reducer;
