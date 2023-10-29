@@ -28,22 +28,6 @@ export default function TaskList() {
   const totalPages = Math.ceil(taskList.length / tasksPerPage);
   const currentTasks = taskList.slice((currentPage - 1) * tasksPerPage, currentPage * tasksPerPage);
 
-  const handleMarkAsDone = async (taskId : any) => {
-    try{
-      await dispatch(markAsDone({userId, taskId}))
-      await dispatch(fetchTasks(userId))
-    }catch(e){
-      console.error(e)}
-  }
-
-  const handleMarkAsNotDone = async (taskId : any) => {
-    try{
-      await dispatch(markAsNotDone({userId, taskId}))
-      await dispatch(fetchTasks(userId))
-    }catch(e){
-      console.error(e)}
-  }
-
   const handleDeleteTask = async (taskId: string) => {
     const userConfirmed = window.confirm("Delete Task?");
     if (userConfirmed) {
@@ -55,6 +39,18 @@ export default function TaskList() {
       }
     }
   }
+  
+
+  const handleToggleTask = async (taskId: string, isDone: boolean) => {
+    if (isDone) {
+      await dispatch(markAsNotDone({ userId, taskId }));
+      await dispatch(fetchTasks(userId));
+    } else {
+      await dispatch(markAsDone({ userId, taskId }))
+      await dispatch(fetchTasks(userId));
+    }
+    await dispatch(fetchTasks(userId));
+  };
   
   return (
     <>
@@ -76,8 +72,18 @@ export default function TaskList() {
                 <td>{task.Task}</td>
                 <td className="max-w-xs break-words">{task.Description}</td>
                 <td>{new Date(task.TimeStamp).toLocaleDateString()}</td>
-                <td>{task.Done ? <button className="btn btn-primary" onClick={() => handleMarkAsNotDone(task.taskId)}>Yes</button> : 
-                <button className="btn btn-primary" onClick={() => handleMarkAsDone(task.taskId)}>No</button>}</td>
+                <td><div className="form-control w-52">
+                  <label className="cursor-pointer label">
+                    <input 
+                      type="checkbox" 
+                      className="toggle toggle-primary" 
+                      checked={task.Done}
+                      onChange={() => handleToggleTask(task.taskId, task.Done)}
+                    />
+                    <span className="label-text">{task.Done ? "Done" : "Not Done"}</span>
+                  </label>
+                </div>
+                </td>
                 <td className="min-h-full py-2 flex items-center justify-center space-x-4 pt-5">
                   <AiFillEdit className="text-3xl" onClick={() => {
                     setIsOpen(true)
