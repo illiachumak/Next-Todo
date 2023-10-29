@@ -51,7 +51,7 @@ const Modal: React.FC<ModalProps> = ( {isOpen, onClose }) => {
                     </div>
                 </>) : 
                 (<>
-
+                    <h1 className="mb-6">You need to be logged in to use our app!</h1>
                 </>)}
                 
             </div>
