@@ -6,16 +6,14 @@ const auth = getAuth(app);
 
 interface AuthState {
   isAuthenticated: boolean;
-  userId: string | null;
-  username: string | null;
+  userId: string;
   errorMessage: string | undefined;
   isLoading: boolean;
 }
 
 const initialState: AuthState = {
   isAuthenticated: false,
-  userId: null,
-  username: null,
+  userId: '',
   errorMessage: undefined,
   isLoading: false
 };

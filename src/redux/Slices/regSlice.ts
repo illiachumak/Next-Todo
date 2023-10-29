@@ -7,17 +7,14 @@ const auth = getAuth(app);
 const db = getDatabase(app)
 
 interface regState {
-  isRegistered: boolean;
+
   userId: string | null;
-  username: string | null;
   errorMessage: string | undefined;
   isLoading: boolean;
 }
 
 const initialState: regState = {
-  isRegistered: false,
   userId: null,
-  username: null,
   errorMessage: undefined,
   isLoading: false
 };
@@ -58,7 +55,6 @@ export const regSlice = createSlice({
         state.errorMessage = undefined;
       })
       .addCase(reg.fulfilled, (state, action) => {
-        state.isRegistered = true;
         state.userId = action.payload;
         state.isLoading = false;
       })

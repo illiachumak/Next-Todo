@@ -5,7 +5,7 @@ export default function LoginPage () {
 
     return <>
     <div className="text-center my-5 flex flex-col gap-4">
-        <AddTask active ={false}/>  
+        <AddTask/>  
     </div>
     <TaskListSkeleton/>
     </>

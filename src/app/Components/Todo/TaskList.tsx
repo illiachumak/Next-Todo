@@ -1,26 +1,111 @@
+"use client";
+import { deleteTaskThunk, fetchTasks, markAsDone, markAsNotDone } from "@/redux/Slices/contentSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { useState } from 'react';
+import { AiFillEdit } from "react-icons/ai";
+import {BsFillTrashFill} from 'react-icons/bs'
+import EditModal from "../Modal/EditModal";
+
+export default function TaskList() {
+
+  type Task = {
+    taskId: string,
+    Task: string;
+    Description: string;
+    TimeStamp: number;
+    Done: boolean;
+  }
 
 
-export default function TaskList () {
-    return <>
-            <div className="overflow-x-auto z-1">
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>Task</th>
-                    <th>Description</th>
-                    <th>Time stamp</th>
-                    <th>Done</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Todo</td>
-                    <td>Make simple todo using Next.js/Typescript</td>
-                    <td>17/12/2023</td>
-                    <td>-</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+  const dispatch = useAppDispatch();
+  const taskList = useAppSelector(state => state.cont.taskList) as Task[];
+  const userId = useAppSelector(state => state.auth.userId)
+
+  const [taskToEdit, setTaskToEdit] = useState<any>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const tasksPerPage = 8;
+  const totalPages = Math.ceil(taskList.length / tasksPerPage);
+  const currentTasks = taskList.slice((currentPage - 1) * tasksPerPage, currentPage * tasksPerPage);
+
+  const handleMarkAsDone = async (taskId : any) => {
+    try{
+      await dispatch(markAsDone({userId, taskId}))
+      await dispatch(fetchTasks(userId))
+    }catch(e){
+      console.error(e)}
+  }
+
+  const handleMarkAsNotDone = async (taskId : any) => {
+    try{
+      await dispatch(markAsNotDone({userId, taskId}))
+      await dispatch(fetchTasks(userId))
+    }catch(e){
+      console.error(e)}
+  }
+
+  const handleDeleteTask = async (taskId: string) => {
+    const userConfirmed = window.confirm("Delete Task?");
+    if (userConfirmed) {
+      try {
+        await dispatch(deleteTaskThunk({ userId, taskId }));
+        await dispatch(fetchTasks(userId));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }
+  
+  return (
+    <>
+    <EditModal isOpen={isOpen} onClose={() => setIsOpen(false)} task = {taskToEdit}/>
+      <div className="flex items-center flex-col">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Task</th>
+              <th>Description</th>
+              <th>Time stamp</th>
+              <th>Done</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentTasks.map(task => (
+              <tr key={task.TimeStamp}>
+                <td>{task.Task}</td>
+                <td className="max-w-xs break-words">{task.Description}</td>
+                <td>{new Date(task.TimeStamp).toLocaleDateString()}</td>
+                <td>{task.Done ? <button className="btn btn-primary" onClick={() => handleMarkAsNotDone(task.taskId)}>Yes</button> : 
+                <button className="btn btn-primary" onClick={() => handleMarkAsDone(task.taskId)}>No</button>}</td>
+                <td className="min-h-full py-2 flex items-center justify-center space-x-4 pt-5">
+                  <AiFillEdit className="text-3xl" onClick={() => {
+                    setIsOpen(true)
+                    setTaskToEdit(task)
+                    }}/>
+                  <BsFillTrashFill className="text-3xl" onClick={() => handleDeleteTask(task.taskId)} />
+                </td>
+
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="join mt-4">
+          {totalPages > 1 && Array.from({ length: totalPages }, (_, index) => {
+            const pageNumber = index + 1;
+            const isActive = currentPage === pageNumber ? 'btn-primary' : '';
+            return (
+              <button
+                key={pageNumber}
+                className={`join-item btn ${isActive}`}
+                onClick={() => setCurrentPage(pageNumber)}
+              >
+                {pageNumber}
+              </button>
+            );
+          })}
+        </div>
+      </div>
     </>
+  );
 }

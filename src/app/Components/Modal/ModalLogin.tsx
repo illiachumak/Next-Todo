@@ -4,7 +4,8 @@ import React, { useLayoutEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { useState } from "react";
 import { useAppDispatch, useAppSelector} from '@/redux/store';
-import { login } from '@/redux/Slices/AuthSlice';
+import { login } from '@/redux/Slices/authSlice';
+import { fetchTasks } from '@/redux/Slices/contentSlice';
 
 interface ModalProps {
     isOpen: boolean;
@@ -14,12 +15,13 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ( {isOpen, onClose }) => {
 
     const dispatch = useAppDispatch();
-    const { isAuthenticated, isLoading } = useAppSelector(state => state.auth)
+    const { isAuthenticated, isLoading, userId } = useAppSelector(state => state.auth)
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
-    useLayoutEffect(() => {
+    useLayoutEffect( () => {
+        dispatch(fetchTasks(userId))
         if (isAuthenticated) {
          onClose();
         }
@@ -27,7 +29,11 @@ const Modal: React.FC<ModalProps> = ( {isOpen, onClose }) => {
     
 
     const loginUser = async (email: string, password: string) => {
-        await dispatch(login({email, password}))
+        try{
+            await dispatch(login({email, password}))
+        } catch (error) {
+            console.error("Error during registration or login:", error);
+          }
     }
 
     const modalRoot = document.getElementById('modal-root');
