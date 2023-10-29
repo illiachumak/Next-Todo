@@ -173,8 +173,9 @@ export const contSlice = createSlice({
       })
       .addCase(fetchTasks.fulfilled, (state, action) => {
         state.isLoadingTasks = false;
+        if(action.payload){
         state.taskList = action.payload;
-        console.log(action.payload)
+        }
       })
       .addCase(fetchTasks.rejected, (state, action) => {
         state.errorMessage = action.error.message;
