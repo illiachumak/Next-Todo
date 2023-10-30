@@ -68,8 +68,8 @@ export default function TaskList() {
             </tr>
           </thead>
           <tbody>
-            {currentTasks.map(task => (
-              <tr key={task.TimeStamp}>
+            {currentTasks.map((task, i) => (
+              <tr key={i}>
                 <td>{task.Task}</td>
                 <td className="max-w-xs break-words">{task.Description}</td>
                 <td>{new Date(task.TimeStamp).toLocaleDateString()}</td>

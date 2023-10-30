@@ -42,8 +42,8 @@ const Modal: React.FC<ModalProps> = ( {isOpen, onClose }) => {
         }else{
             try {
                 setError('')
-                await dispatch(reg({ email, password }));
-                await dispatch(login({ email, password }));
+                await dispatch(reg({ email, password }))
+                await dispatch(login({ email, password }))
             } catch (error) {
                 console.error(error)
             }

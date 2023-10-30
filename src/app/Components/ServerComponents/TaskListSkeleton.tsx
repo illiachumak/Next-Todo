@@ -1,8 +1,10 @@
+import { useState } from "react"
 import { AiFillEdit } from "react-icons/ai"
 import { BsFillTrashFill } from "react-icons/bs"
 
 export default function TaskListSkeleton () {
     const dummyTodo = [1,2,3,4,5,6]
+    const [checkInput, setCheckInput] = useState(true)
     return <>
             <div className="overflow-x-auto select-none">
               <table className="table">
@@ -28,7 +30,8 @@ export default function TaskListSkeleton () {
                     <input 
                       type="checkbox" 
                       className="toggle toggle-primary" 
-                      checked={true}
+                      checked={checkInput}
+                      onChange={() => setCheckInput(prev => !prev)}
                       
                     />
                     <span className="label-text">Done</span>
