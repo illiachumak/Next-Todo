@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 import { useState } from "react";
 import { useAppDispatch, useAppSelector} from '@/redux/store';
 import { editTaskThunk, fetchTasks } from '@/redux/Slices/contentSlice';
+import useValidateInput from '@/app/hooks/useValidateInput';
 
 type Task = {
     taskId: string,
@@ -33,19 +34,29 @@ const Modal: React.FC<ModalProps> = ( {isOpen, onClose, task}) => {
     const [error, setError] = useState('');
 
     const HandleEditTask = async () => {
-        try{
-            await dispatch(editTaskThunk({userId, taskId: task.taskId, data: {
-                Task: name,
-                Description: descr,
-                TimeStamp: task.TimeStamp,
-                Done: task.Done,
-            }}))
-            await dispatch(fetchTasks(userId))
-            onClose()
-        } catch (e){
-            console.error(e)
-        }
+
+        const inputError = useValidateInput(name, '', '')
+        const inputError2 = useValidateInput(descr, '', '')
         
+        if(inputError || inputError2 || name === task.Task || descr === task.Description){
+            if(inputError) setError(inputError)
+            if(inputError2) setError(inputError2)
+            if(name === task.Task) setError('You have to change something!')
+            if(descr === task.Description) setError('You have to change something!')
+        } else{
+            try{
+                await dispatch(editTaskThunk({userId, taskId: task.taskId, data: {
+                    Task: name,
+                    Description: descr,
+                    TimeStamp: task.TimeStamp,
+                    Done: task.Done,
+                }}))
+                await dispatch(fetchTasks(userId))
+                onClose()
+            } catch (e){
+                console.error(e)
+            }
+    }
     }
     
 
@@ -57,9 +68,13 @@ const Modal: React.FC<ModalProps> = ( {isOpen, onClose, task}) => {
                 <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onClick={onClose}>✕</button>
                 {isAuthenticated ? 
                 (<>
-                    <div>
+                    <div className='pb-24 '>
                         <input type="text" placeholder="Task" value={name} onChange={(e) => setName(e.target.value)}  className="input input-bordered input-primary w-full mb-4" />
-                        <textarea className="textarea textarea-primary mb-24 w-full" placeholder="Description"  value={descr} onChange={(e) => setDescr(e.target.value)}></textarea>
+                        <textarea className="textarea textarea-primary w-full" placeholder="Description"  value={descr} onChange={(e) => setDescr(e.target.value)}></textarea>
+                        <label className="label">
+                        <span className="label-text text-red-400">{error && error}</span>
+                        <span className="label-text-alt"></span>
+                        </label>
                     </div>
                     <div className="modal-action absolute right-10 bottom-10">
                         <button className="btn btn-primary" onClick={HandleEditTask}>Edit Task</button>

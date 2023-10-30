@@ -9,13 +9,13 @@ const db = getDatabase(app)
 interface regState {
 
   userId: string | null;
-  errorMessage: string | undefined;
+  errorReg: string | undefined;
   isLoading: boolean;
 }
 
 const initialState: regState = {
   userId: null,
-  errorMessage: undefined,
+  errorReg: undefined,
   isLoading: false
 };
 
@@ -29,9 +29,14 @@ async function regUser(email: string, password: string): Promise<string> {
     alert("User Created!");
     return user.uid;
   } catch (error: any) {
-    throw new Error('Something went wrong');
+    if (error.code === "auth/email-already-in-use") {
+      throw new Error('This email is already registered.');
+    } else {
+      throw new Error(error.message);
+    }
   }
 }
+
 
 export const reg = createAsyncThunk(
   'reg/regUser',
@@ -44,7 +49,7 @@ export const regSlice = createSlice({
   name: 'reg',
   initialState,
   reducers: {
-    logOut: () => {
+    returnError: () => {
       return initialState;
     },
   },
@@ -52,19 +57,19 @@ export const regSlice = createSlice({
     builder
       .addCase(reg.pending, (state) => {
         state.isLoading = true;
-        state.errorMessage = undefined;
+        state.errorReg = undefined;
       })
       .addCase(reg.fulfilled, (state, action) => {
         state.userId = action.payload;
         state.isLoading = false;
       })
       .addCase(reg.rejected, (state, action) => {
-        state.errorMessage = action.error.message;
+        state.errorReg = action.error.message;
         state.isLoading = false;
       });
   },
 });
 
-export const { logOut } = regSlice.actions;
+export const { returnError } = regSlice.actions;
 
 export default regSlice.reducer;

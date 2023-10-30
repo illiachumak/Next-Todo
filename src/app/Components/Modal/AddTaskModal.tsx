@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 import { useState } from "react";
 import { useAppDispatch, useAppSelector} from '@/redux/store';
 import { addTask, fetchTasks } from '@/redux/Slices/contentSlice';
+import useValidateInput from '@/app/hooks/useValidateInput';
 
 interface ModalProps {
     isOpen: boolean;
@@ -23,13 +24,21 @@ const Modal: React.FC<ModalProps> = ( {isOpen, onClose }) => {
     const [error, setError] = useState('');
 
     const HandleAddTask = async () => {
-        try{
-          await dispatch(addTask({ userId, name, descr }));  
-          await dispatch(fetchTasks(userId))
-          onClose()
-        } catch (e){
-            console.error(e)
+        const inputError = useValidateInput(name, '', '')
+        const inputError2 = useValidateInput(descr, '', '')
+        if(inputError || inputError2){
+            if(inputError) setError(inputError)
+            else setError(inputError2)
         }
+        else{
+            try{
+            await dispatch(addTask({ userId, name, descr }));  
+            await dispatch(fetchTasks(userId))
+            onClose()
+            } catch (e){
+                console.error(e)
+            }
+    }
         
     }
     
@@ -42,9 +51,13 @@ const Modal: React.FC<ModalProps> = ( {isOpen, onClose }) => {
                 <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onClick={onClose}>✕</button>
                 {isAuthenticated ? 
                 (<>
-                    <div>
+                    <div className='pb-24'>
                         <input type="text" placeholder="Task" value={name} onChange={(e) => setName(e.target.value)}  className="input input-bordered input-primary w-full mb-4" />
-                        <textarea className="textarea textarea-primary mb-24 w-full" placeholder="Description"  value={descr} onChange={(e) => setDescr(e.target.value)}></textarea>
+                        <textarea className="textarea textarea-primary w-full" placeholder="Description"  value={descr} onChange={(e) => setDescr(e.target.value)}></textarea>
+                        <label className="label">
+                        <span className="label-text text-red-400">{error && error}</span>
+                        <span className="label-text-alt"></span>
+                        </label>
                     </div>
                     <div className="modal-action absolute right-10 bottom-10">
                         <button className="btn btn-primary" onClick={HandleAddTask}>Add Task</button>

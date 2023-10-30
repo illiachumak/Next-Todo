@@ -23,6 +23,7 @@ export default function TaskList() {
 
   const [taskToEdit, setTaskToEdit] = useState<any>(null);
   const [isOpen, setIsOpen] = useState(false);
+  
   const [currentPage, setCurrentPage] = useState(1);
   const tasksPerPage = 8;
   const totalPages = Math.ceil(taskList.length / tasksPerPage);

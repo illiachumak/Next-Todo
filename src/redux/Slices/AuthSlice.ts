@@ -22,9 +22,6 @@ async function loginUser(email: string, password: string): Promise<string> {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
-
-    console.log('logged in')
-
     return user.uid;
   } catch (error: any) {
     throw new Error('Something went wrong');
@@ -42,7 +39,7 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    logOut: () => {
+    returnError : () => {
       return initialState;
     },
   },
@@ -58,12 +55,12 @@ export const authSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(login.rejected, (state, action) => {
-        state.errorMessage = action.error.message;
+        state.errorMessage = 'Invali Email or Password!!!';
         state.isLoading = false;
       });
   },
 });
 
-export const { logOut } = authSlice.actions;
+export const { returnError } = authSlice.actions;
 
 export default authSlice.reducer;
