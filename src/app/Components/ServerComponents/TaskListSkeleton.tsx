@@ -1,6 +1,8 @@
+import { AiFillEdit } from "react-icons/ai"
+import { BsFillTrashFill } from "react-icons/bs"
 
 export default function TaskListSkeleton () {
-    const dummyTodo = [1,2,3,4,5,6,7,8]
+    const dummyTodo = [1,2,3,4,5,6]
     return <>
             <div className="overflow-x-auto select-none">
               <table className="table">
@@ -18,13 +20,28 @@ export default function TaskListSkeleton () {
                     {dummyTodo.map((_,i) => {
                         return(
                         <tr key={i}>
-                            <td>Todo</td>
-                            <td>Make simple todo using Next.js/Typescript</td>
-                            <td>17/12/2023</td>
-                            <td>-</td>
-                            <td>edit \ delete</td>
-                            
-                        </tr>
+                <td>Task</td>
+                <td className="max-w-xs break-words">Description</td>
+                <td>30.10.2023</td>
+                <td><div className="form-control w-52">
+                  <label className="cursor-pointer label">
+                    <input 
+                      type="checkbox" 
+                      className="toggle toggle-primary" 
+                      checked={true}
+                      
+                    />
+                    <span className="label-text">Done</span>
+                  </label>
+                </div>
+                </td>
+                <td className="min-h-full py-2 flex items-center justify-center space-x-4 pt-5">
+                  <AiFillEdit className="text-3xl"/>
+                  <BsFillTrashFill className="text-3xl"/>
+                </td>
+
+              </tr>
+                        
                         )
                     })}
                   
