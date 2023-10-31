@@ -1,6 +1,6 @@
 "use client";
-import { deleteTaskThunk, fetchTasks, markAsDone, markAsNotDone } from "../../../redux/Slices/contentSlice";
-import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { deleteTaskThunk, fetchTasks, markAsDone, markAsNotDone } from "../../redux/Slices/contentSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { useState } from 'react';
 import { AiFillEdit } from "react-icons/ai";
 import {BsFillTrashFill} from 'react-icons/bs'
