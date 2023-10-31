@@ -2,7 +2,7 @@
 import TaskListSkeleton from "../Components/ServerComponents/TaskListSkeleton"
 import AddTask from "../Components/Todo/AddTask"
 import TaskList from "../Components/Todo/TaskList"
-import { useAppSelector } from "../../redux/store"
+import { useAppSelector } from "../redux/store"
 
 export default function TodoPage () {
     const {taskList, isLoadingTasks} = useAppSelector(state => state.cont)

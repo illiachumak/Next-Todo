@@ -2,7 +2,7 @@
 
 import ContentPage from "./Pages/ContentPage"
 import LoginPage from "./Pages/LoginPage";
-import { useAppSelector } from "../redux/store";
+import { useAppSelector } from "./redux/store";
 import Navbar from "./Components/ServerComponents/Navbar";
 
 export default function Home() {
