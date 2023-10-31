@@ -1,7 +1,7 @@
 ## Todo App:
   Development: Next.js/Typescript, TailwindCSS/DaisyUI, Firebase Auth/RealTimeDB, Redux/ReduxToolkit, ESLint.
   Testing: React-testing-library/Jest.
-  Deploy: [Netlify](https://6540d69007e74400084ede75--glistening-creponne-5d0984.netlify.app/)
+  Deploy: [Netlify](https://main--glistening-creponne-5d0984.netlify.app/)
 
 ## Getting Started
 
