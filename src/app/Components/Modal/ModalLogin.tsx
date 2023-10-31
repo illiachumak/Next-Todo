@@ -3,10 +3,10 @@
 import React, { useEffect, useLayoutEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { useState } from "react";
-import { useAppDispatch, useAppSelector} from '@/redux/store';
-import { login, returnError } from '@/redux/Slices/authSlice';
-import { fetchTasks } from '@/redux/Slices/contentSlice';
-import useValidateInput from '@/app/hooks/useValidateInput';
+import { useAppDispatch, useAppSelector} from '../../../redux/store';
+import { login, returnError } from '../../../redux/Slices/authSlice';
+import { fetchTasks } from '../../../redux/Slices/contentSlice';
+import useValidateInput from '../../../app/hooks/useValidateInput';
 
 
 interface ModalProps {

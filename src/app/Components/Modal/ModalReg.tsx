@@ -2,10 +2,10 @@
 import React, { useLayoutEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { useState } from "react";
-import { useAppDispatch, useAppSelector } from '@/redux/store';
-import { reg, returnError } from '@/redux/Slices/regSlice';
-import { login } from '@/redux/Slices/authSlice';
-import useValidateInput from '@/app/hooks/useValidateInput';
+import { useAppDispatch, useAppSelector } from '../../../redux/store';
+import { reg, returnError } from '../../../redux/Slices/regSlice';
+import { login } from '../../../redux/Slices/authSlice';
+import useValidateInput from '../../../app/hooks/useValidateInput';
 
 
 interface ModalProps {
