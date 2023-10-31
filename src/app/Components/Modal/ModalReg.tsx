@@ -11,6 +11,9 @@ import useValidateInput from '@/app/hooks/useValidateInput';
 interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
+    error?: string; 
+    registerUser?: () => void;
+    isLoading?: boolean;
 }
 
 const Modal: React.FC<ModalProps> = ( {isOpen, onClose }) => {
@@ -91,7 +94,7 @@ const Modal: React.FC<ModalProps> = ( {isOpen, onClose }) => {
                 </div> 
 
                 <div className="modal-action absolute right-10 bottom-10">
-                <button className="btn btn-primary" onClick={() => registerUser(email, password)}>{isLoading ? <span className="loading loading-spinner"></span> : 'Sign up'}</button>
+                <button className="btn btn-primary" data-testid="sign-up-button" onClick={() => registerUser(email, password)}>{isLoading ? <span className="loading loading-spinner"></span> : 'Sign up'}</button>
                 </div>
             </div>
         </div>,

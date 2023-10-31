@@ -3,7 +3,7 @@ import { render, screen, fireEvent, act } from "@testing-library/react";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
-import Modal from "../src/app/Components/Modal/ModalLogin";
+import Modal from "../src/app/Components/Modal/ModalReg";
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -28,6 +28,10 @@ describe("<Modal />", () => {
             isLoading: false,
             userId: "testUserId",
             errorMessage: ""
+        },
+        reg: {
+            isLoading: false,
+            errorReg: "",
         }
     };
 
@@ -36,9 +40,7 @@ describe("<Modal />", () => {
         return {
             ...render(
                 <Provider store={store}>
-                    <Modal isOpen={false} onClose={function (): void {
-                        throw new Error("Function not implemented.");
-                    } } {...props} />
+                    <Modal isOpen={false} onClose={jest.fn()} {...props} />
                 </Provider>
             ),
             store
@@ -49,13 +51,13 @@ describe("<Modal />", () => {
         renderWithStore(undefined, { isOpen: true, onClose: jest.fn() });
     });
 
-    it("shows the login form when open", () => {
+    it("shows the registration form when open", () => {
         renderWithStore(undefined, { isOpen: true, onClose: jest.fn() });
         expect(screen.getByPlaceholderText("Email")).toBeInTheDocument();
         expect(screen.getByPlaceholderText("Password")).toBeInTheDocument();
     });
 
-    it("closes the modal when close button is clicked", () => {
+    it("closes the modal when the close button is clicked", () => {
         const onCloseMock = jest.fn();
         renderWithStore(undefined, { isOpen: true, onClose: onCloseMock });
 
@@ -65,11 +67,17 @@ describe("<Modal />", () => {
     });
 
     it("displays error messages", async () => {
-        const errorMessage = "Login failed!";
+        const errorMessage = "Registration failed!";
         renderWithStore({
             auth: {
-                ...initialState.auth,
-                errorMessage
+                isAuthenticated: false,
+                isLoading: false,
+                userId: "testUserId",
+                errorMessage: ""
+            },
+            reg: {
+                ...initialState.reg,
+                errorReg: errorMessage
             }
         }, { isOpen: true, onClose: jest.fn() });
 
@@ -79,4 +87,28 @@ describe("<Modal />", () => {
         expect(errorMsgElement).toBeInTheDocument();
     });
 
+    it("does not submit the registration form with invalid input", async () => {
+        const email = "invalid-email";
+        const password = "";
+        const regActionMock = jest.fn();
+
+        renderWithStore(undefined, {
+            isOpen: true,
+            onClose: jest.fn(),
+            registerUser: regActionMock,
+        });
+
+        const emailInput = screen.getByPlaceholderText("Email");
+        const passwordInput = screen.getByPlaceholderText("Password");
+        const submitButton = screen.getByTestId("sign-up-button");
+
+        fireEvent.change(emailInput, { target: { value: email } });
+        fireEvent.change(passwordInput, { target: { value: password } });
+
+        await act(async () => {
+            fireEvent.click(submitButton);
+        });
+
+        expect(regActionMock).not.toHaveBeenCalled();
+    });
 });
