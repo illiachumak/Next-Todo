@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useAppDispatch, useAppSelector} from '../../../redux/store';
 import { login, returnError } from '../../../redux/Slices/authSlice';
 import { fetchTasks } from '../../../redux/Slices/contentSlice';
-import useValidateInput from '../../../app/hooks/useValidateInput';
+import useValidateInput from '../../hooks/useValidateInput';
 
 
 interface ModalProps {
@@ -28,7 +28,7 @@ const Modal: React.FC<ModalProps> = ( {isOpen, onClose }) => {
         if (isAuthenticated) {
          onClose();
         }
-    }, [isAuthenticated, onClose]);
+    }, [isAuthenticated, onClose, dispatch]);
     
     const loginUser = async (email: string, password: string) => {
 

@@ -5,14 +5,14 @@ import ReactDOM from 'react-dom';
 import { useState } from "react";
 import { useAppDispatch, useAppSelector} from '../../../redux/store';
 import { addTask, fetchTasks } from '../../../redux/Slices/contentSlice';
-import useValidateInput from '../../../app/hooks/useValidateInput';
+import useValidateInput from '../../hooks/useValidateInput';
 
 interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
 }
 
-const Modal: React.FC<ModalProps> = ( {isOpen, onClose }) => {
+const Modal: React.FC<ModalProps> = ( {isOpen, onClose}) => {
 
     const modalRoot = document.getElementById('modal-root');
     if (!isOpen || !modalRoot) return null;

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useAppDispatch, useAppSelector } from '../../../redux/store';
 import { reg, returnError } from '../../../redux/Slices/regSlice';
 import { login } from '../../../redux/Slices/authSlice';
-import useValidateInput from '../../../app/hooks/useValidateInput';
+import useValidateInput from '../../hooks/useValidateInput';
 
 
 interface ModalProps {
