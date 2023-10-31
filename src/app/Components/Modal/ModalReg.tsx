@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/store';
 import { reg, returnError } from '../../redux/Slices/regSlice';
 import { login } from '../../redux/Slices/authSlice';
 import useValidateInput from '../../hooks/useValidateInput';
+import { fetchTasks } from '@/app/redux/Slices/contentSlice';
 
 
 interface ModalProps {
@@ -22,10 +23,11 @@ const Modal: React.FC<ModalProps> = ( {isOpen, onClose }) => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const { isLoading, errorReg } = useAppSelector(state => state.reg);
-    const { isAuthenticated } = useAppSelector(state => state.auth);
+    const { isAuthenticated, userId } = useAppSelector(state => state.auth);
     const dispatch = useAppDispatch();
     
     useLayoutEffect(() => {
+        dispatch(fetchTasks(userId))
         if (isAuthenticated) {
         dispatch(returnError())
          onClose();
