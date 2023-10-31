@@ -6,15 +6,16 @@ import { AiFillEdit } from "react-icons/ai";
 import {BsFillTrashFill} from 'react-icons/bs'
 import EditModal from "../Modal/EditModal";
 
-export default function TaskList() {
-
-  type Task = {
+export type Task = {
     taskId: string,
     Task: string;
     Description: string;
     TimeStamp: number;
     Done: boolean;
   }
+export default function TaskList() {
+
+
 
 
   const dispatch = useAppDispatch();

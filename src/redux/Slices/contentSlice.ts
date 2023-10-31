@@ -11,7 +11,7 @@ type Task = {
   Done: boolean
 };
 
-interface contState {
+export interface contState {
   taskList: any[];
   errorMessage: string | undefined;
   isLoading: boolean;
